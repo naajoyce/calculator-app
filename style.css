@@ -1,60 +1,47 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
+.calculator {
+    background-color: rgb(44, 40, 40);
+    border: 5px solid black;
+    width: 300px;
     padding: 20px;
-    background-color: #f0f8ff; /* Light background color */
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 3px 3px 3px 3px black;
+    
 }
 
-h1 {
-    color: #333; /* Darker color for the title */
-}
 
-p {
-    color: #555; /* Slightly lighter color for text */
-    font-size: 1.2rem;
-}
-
-form {
-    margin-top: 20px;
-}
-
-label {
-    font-size: 1.2rem;
-    margin-right: 10px;
-}
-
-input[type="number"] {
-    font-size: 1rem;
-    padding: 5px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    width: 200px;
-    box-shadow: #150404;
-}
-
-#submitButton {
-    font-size: 1rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: deepskyblue; /* Blue background color */
+#display {
+    width: 100%;
+    height: 100px;
+    background-color: #e6d8d8;
     color: black;
-    cursor: pointer;
-    margin-left: 10px;
-   }
+    font-size: 1.5rem;
+    text-align: right;
+    border: none;
+    margin-bottom: 10px;
 
-   #submitButton:hover { background-color: #007bff;;
 }
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
    
-#feedback {
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 1.1rem;
 }
 
-#previousGuesses {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: #444;
+button {
+    width:100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #2f2d2d;
+    color: white;
+    cursor: pointer;
+    box-shadow: 3px 3px 3px 3px black;
 }
+
+button:hover {
+    background-color: pink;
+}
+

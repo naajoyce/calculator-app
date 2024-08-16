@@ -1,96 +1,71 @@
-//step 1: Generate a random number between 1 and 100
-let randomNumber = Math.floor(Math.random() * 98) + 2;
+// Step 1: Select elements
+const buttons = document.querySelectorAll('.buttons button');
+const display = document.getElementById('display');
+const deleteButton = document.getElementById('delete');
+const equalsButton = document.getElementById('equals');
 
-//step 2: Initialize variables
-let turnCounter = 0;
-let previousGuesses = [];
-const maxTurns = 10;
+// Variables to store the first number, operator, and the current state
+let firstNumber = '';
+let operator = '';
+let waitingForSecondNumber = false;
 
-// Selecting the input and button id from the HTML
-const guessInput = document.getElementById('guessInput');
-const submitButton = document.getElementById('submitButton');
+// Step 2: Add event listeners to the buttons
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        const buttonText = button.textContent;
 
-// Link the feedback and previous guesses display
-const feedback = document.getElementById('feedback');
-const previousGuessesDisplay = document.getElementById('previousGuesses');
+        // Handle numbers and the decimal point
+        if (!isNaN(buttonText) || buttonText === '.') {
+            // Clear the display if waiting for the second number
+            if (waitingForSecondNumber) {
+                display.value = '';
+                waitingForSecondNumber = false;
+            }
+            display.value += buttonText;
+        }
 
-// Add event listener to the submitButton
-submitButton.addEventListener('click', checkGuess);
+        // Handle operators
+        if (buttonText === '+' || buttonText === '-' || buttonText === '*' || buttonText === '/') {
+            firstNumber = display.value;
+            operator = buttonText;
+            waitingForSecondNumber = true;
+        }
+    });
+});
 
-//step 3: Create the checkGuess function
-function checkGuess(event) {
-    event.preventDefault(); // Prevent the form from submitting
-    const userGuess = Number(guessInput.value);
-    console.log(userGuess);
-    guessInput.value=null
+// Step 3: Handle the equals button
+equalsButton.addEventListener('click', () => {
+    const secondNumber = display.value;
 
-    // Validate the guess
-    if (isNaN(userGuess) || userGuess < 2 || userGuess > 99) {
-        feedback.textContent = "Please enter a number between 1 and 100!";
-        feedback.style.color = 'red';
-        return;
+    if (firstNumber !== '' && operator !== '') {
+        const result = evaluate(firstNumber, operator, secondNumber);
+        display.value = result;
+        firstNumber = ''; // Reset the first number
+        operator = ''; // Reset the operator
+        waitingForSecondNumber = false;
     }
+});
 
-    // Track the turn count and store the guess
-    turnCounter++;
-    previousGuesses.push(userGuess);
-    previousGuessesDisplay.textContent = `Previous guesses: ${previousGuesses.join(', ')}`;
+// Step 4: Handle the delete button
+deleteButton.addEventListener('click', () => {
+    display.value = display.value.slice(0, -1);
+});
 
-    // Compare the player's guess to the random number
-    if (userGuess === randomNumber) {
-        feedback.textContent = 'Congratulations, you guessed the right number!';
-        feedback.style.color = 'green';
-        endGame();
-    } else if (userGuess < randomNumber) {
-        feedback.textContent = 'Too low! Try again.';
-        feedback.style.color = 'red';
-    } else if (userGuess > randomNumber) {
-        feedback.textContent = 'Too high! Try again.';
-        feedback.style.color = 'red';
+// Step 5: Function to evaluate the expression
+function evaluate(firstNumber, operator, secondNumber) {
+    const num1 = parseFloat(firstNumber);
+    const num2 = parseFloat(secondNumber);
+
+    switch (operator) {
+        case '+':
+            return num1 + num2;
+        case '-':
+            return num1 - num2;
+        case '*':
+            return num1 * num2;
+        case '/':
+            return num1 / num2;
+        default:
+            return 0;
     }
-
-    // Check if the player has run out of turns
-    if (turnCounter >= maxTurns && userGuess !== randomNumber) {
-        feedback.textContent = `Game over! The number was ${randomNumber}.`;
-        feedback.style.color = 'red';
-        endGame();
-    }
-}
-
-// Step 5: End game and disable input
-function endGame() {
-    guessInput.disabled = true;
-    submitButton.disabled = true;
-
-    // Create a restart button
-    const restartButton = document.createElement('button');
-    restartButton.textContent = 'Start New Game';
-    document.body.appendChild(restartButton);
-
-    // Add event listener to the restart button
-    restartButton.addEventListener('click', restartGame);
-}
-
-// Step 6: Restart game
-function restartGame() {
-    turnCounter = 0;
-    previousGuesses = [];
-    feedback.textContent = '';
-    previousGuessesDisplay.textContent = 'Previous guesses: ';
-    guessInput.disabled = false;
-    submitButton.disabled = false;
-    document.body.appendChild(submitButton);
-    submitButton.style.color='gray';
-    guessInput.value = '';
-    guessInput.focus();
-    
-
-    // Generate a new random number
-    randomNumber = Math.floor(Math.random() * 100) + 1;
-
-    // Remove the restart button
-    const restartButton = document.querySelector('button');
-    restartButton.remove();
-
-  
 }
